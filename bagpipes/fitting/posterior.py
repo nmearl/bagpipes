@@ -35,13 +35,13 @@ class posterior(object):
         The number of posterior samples to generate for each quantity.
     """
 
-    def __init__(self, galaxy, run=".", n_samples=500):
+    def __init__(self, galaxy, run=".", n_samples=500, root_path="./"):
 
         self.galaxy = galaxy
         self.run = run
         self.n_samples = n_samples
 
-        fname = "pipes/posterior/" + self.run + "/" + self.galaxy.ID + ".h5"
+        fname = root_path + "pipes/posterior/" + self.run + "/" + self.galaxy.ID + ".h5"
 
         # Check to see whether the object has been fitted.
         if not os.path.exists(fname):

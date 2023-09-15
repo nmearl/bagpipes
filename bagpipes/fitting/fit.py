@@ -73,8 +73,8 @@ class fit(object):
         posterior once fitting is complete. Default is 500.
     """
 
-    def __init__(self, galaxy, fit_instructions, run=".", time_calls=False,
-                 n_posterior=500):
+    def __init__(self, galaxy, fit_instructions, run=".", root_path="./",
+                 time_calls=False, n_posterior=500):
 
         self.run = run
         self.galaxy = galaxy
@@ -86,17 +86,22 @@ class fit(object):
             utils.make_dirs(run=run)
 
         # The base name for output files.
-        self.fname = "pipes/posterior/" + run + "/" + self.galaxy.ID + "_"
+        self.fname = root_path + "pipes/posterior/" + run + "/" + self.galaxy.ID + "_"
+        out_path = self.fname[:-1] + ".h5"
 
         # A dictionary containing properties of the model to be saved.
         self.results = {}
 
+        # print(f"Expecting output at {out_path}")
+
         # If a posterior file already exists load it.
-        if os.path.exists(self.fname[:-1] + ".h5"):
-            file = h5py.File(self.fname[:-1] + ".h5", "r")
+        if os.path.exists(out_path):
+            print("Loading from saved output...")
+            file = h5py.File(out_path, "r")
 
             self.posterior = posterior(self.galaxy, run=run,
-                                       n_samples=n_posterior)
+                                       n_samples=n_posterior,
+                                       root_path=root_path)
 
             fit_info_str = file.attrs["fit_instructions"]
             fit_info_str = fit_info_str.replace("array", "np.array")
